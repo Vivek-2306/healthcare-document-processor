@@ -1,0 +1,7 @@
+
+
+#Ignore cursor AI rules
+.cursor\rules\codacy.mdc
+healthcare-document-processor/backend/venv/
+healthcare-document-processor/backend/.env
+healthcare-document-processor/backend/.env.example

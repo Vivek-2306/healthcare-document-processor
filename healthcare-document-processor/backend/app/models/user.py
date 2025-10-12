@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean, Enum, UUID
+from sqlalchemy import Column, String, DateTime, Boolean, Enum, UUID, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import enum
@@ -17,7 +17,7 @@ class User(Base):
 
     id = Column(UUID, primary_key=True, index=True, default=uuid4)
     email = Column(String(255), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
+    password_hash = Column(Text, nullable=False)
     full_name = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), default=UserRole.PATIENT, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)

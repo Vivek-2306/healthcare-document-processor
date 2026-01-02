@@ -1,8 +1,9 @@
+from multiprocessing import process
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import test_db_connection
-from app.api import auth, users, documents
+from app.api import auth, users, documents, processing
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -21,6 +22,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(documents.router)
+app.include_router(processing.router)
 
 @app.get("/")
 async def root():

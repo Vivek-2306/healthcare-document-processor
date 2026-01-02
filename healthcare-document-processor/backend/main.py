@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import test_db_connection
-from app.api import auth, users
+from app.api import auth, users, documents
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -20,6 +20,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(documents.router)
 
 @app.get("/")
 async def root():

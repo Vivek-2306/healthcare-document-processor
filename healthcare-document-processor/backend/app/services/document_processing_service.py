@@ -3,11 +3,14 @@ from typing import Optional
 from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+import logging
 
 from app.models import Document, DocumentStatus, DocumentChunk, User
 from app.services.ocr_service import OCRService
 from app.services.document_preprocessing import DocumentPreprocessor
 from app.services.storage_service import S3StorageService
+
+logger = logging.getLogger(__name__)
 
 
 class DocumentProcessingService:
@@ -125,3 +128,29 @@ class DocumentProcessingService:
             'total_chunks': len(chunks),
             'metadata': document.document_metadata
         }
+
+    def process_and_index_document(
+        self,
+        document_id: UUID,
+        user: User,
+        index_after_processing: bool = True
+    ):
+        document = self.process_document(document_id, user)
+
+        if index_after_processing and document.status == DocumentStatus.PROCESSED:
+            try:
+                from app.services.rag_service import RAGService
+                from app.services.embedding_service import EmbeddingService
+                from app.services.vector_db_service import get_vector_db_service
+
+                rag_service = RAGService(
+                    db=self.db,
+                    embedding_service=EmbeddingService(),
+                    vector_db_service=get_vector_db_service()
+                )
+                rag_service.index_document_chunks(document_id, user)
+            
+            except Exception as e:
+                logger.warning(f"Failed to index document after processing: {e}")
+
+        return document

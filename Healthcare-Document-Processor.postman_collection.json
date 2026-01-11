@@ -1,0 +1,893 @@
+{
+	"info": {
+		"_postman_id": "healthcare-doc-processor-api",
+		"name": "Healthcare Document Processor API",
+		"description": "Complete API collection for Healthcare Document Processing System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "healthcare-api"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"confirm_password\": \"password123\",\n  \"full_name\": \"John Doe\",\n  \"role\": \"patient\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						},
+						"description": "Register a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"access_token\", jsonData.tokens.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.tokens.refresh_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Login and get JWT tokens"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh"]
+						},
+						"description": "Refresh access token using refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "me"]
+						},
+						"description": "Get current authenticated user information"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"password123\",\n  \"new_password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/change-password",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "change-password"]
+						},
+						"description": "Change user password"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						},
+						"description": "Logout user"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users?skip=0&limit=100",
+							"host": ["{{base_url}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						},
+						"description": "List all users (Staff and above only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:user_id",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":user_id"],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "user-uuid-here"
+								}
+							]
+						},
+						"description": "Get user by ID (Staff and above only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Activate User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:user_id/activate",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":user_id", "activate"],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "user-uuid-here"
+								}
+							]
+						},
+						"description": "Activate user account (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"new_role\": \"doctor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/:user_id/role?new_role=doctor",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":user_id", "role"],
+							"query": [
+								{
+									"key": "new_role",
+									"value": "doctor"
+								}
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "user-uuid-here"
+								}
+							]
+						},
+						"description": "Update user role (Admin only)"
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Documents",
+			"item": [
+				{
+					"name": "Upload Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "Document file to upload"
+								},
+								{
+									"key": "document_type",
+									"value": "medical_record",
+									"type": "text",
+									"description": "Type of document (medical_record, lab_result, imaging, prescription, insurance, identification, other)"
+								},
+								{
+									"key": "description",
+									"value": "Document description",
+									"type": "text",
+									"description": "Optional description"
+								},
+								{
+									"key": "tags",
+									"value": "tag1,tag2",
+									"type": "text",
+									"description": "Comma-separated tags"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/upload",
+							"host": ["{{base_url}}"],
+							"path": ["documents", "upload"]
+						},
+						"description": "Upload a document file"
+					},
+					"response": []
+				},
+				{
+					"name": "List Documents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents?skip=0&limit=50",
+							"host": ["{{base_url}}"],
+							"path": ["documents"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								}
+							]
+						},
+						"description": "List all documents for current user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/:document_id",
+							"host": ["{{base_url}}"],
+							"path": ["documents", ":document_id"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Get document details by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Document Metadata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Updated description\",\n  \"tags\": [\"tag1\", \"tag2\"],\n  \"document_type\": \"medical_record\",\n  \"status\": \"processed\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/:document_id",
+							"host": ["{{base_url}}"],
+							"path": ["documents", ":document_id"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Update document metadata"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/:document_id",
+							"host": ["{{base_url}}"],
+							"path": ["documents", ":document_id"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Delete a document"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Download Link",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/:document_id/download",
+							"host": ["{{base_url}}"],
+							"path": ["documents", ":document_id", "download"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Generate presigned download URL for document"
+					},
+					"response": []
+				}
+			],
+			"description": "Document management endpoints"
+		},
+		{
+			"name": "Processing",
+			"item": [
+				{
+					"name": "Process Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/processing/:document_id/process",
+							"host": ["{{base_url}}"],
+							"path": ["processing", ":document_id", "process"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Trigger OCR processing and chunking for a document"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document Text",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/processing/:document_id/text",
+							"host": ["{{base_url}}"],
+							"path": ["processing", ":document_id", "text"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Get extracted text from processed document"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document Chunks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/processing/:document_id/chunks",
+							"host": ["{{base_url}}"],
+							"path": ["processing", ":document_id", "chunks"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Get all chunks for a processed document"
+					},
+					"response": []
+				}
+			],
+			"description": "Document processing endpoints"
+		},
+		{
+			"name": "RAG Search",
+			"item": [
+				{
+					"name": "Index Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rag/index/:document_id",
+							"host": ["{{base_url}}"],
+							"path": ["rag", "index", ":document_id"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Index document chunks in vector database"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Documents (POST)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"patient diagnosis and treatment\",\n  \"n_results\": 10,\n  \"document_type\": null,\n  \"document_id\": null\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/rag/search",
+							"host": ["{{base_url}}"],
+							"path": ["rag", "search"]
+						},
+						"description": "Search documents using semantic similarity (POST)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Documents (GET)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rag/search?q=patient+diagnosis&n_results=10",
+							"host": ["{{base_url}}"],
+							"path": ["rag", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "patient diagnosis",
+									"description": "Search query"
+								},
+								{
+									"key": "n_results",
+									"value": "10",
+									"description": "Number of results"
+								},
+								{
+									"key": "document_type",
+									"value": "",
+									"description": "Filter by document type",
+									"disabled": true
+								},
+								{
+									"key": "document_id",
+									"value": "",
+									"description": "Filter by document ID",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Search documents using semantic similarity (GET)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Document Index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rag/index/:document_id",
+							"host": ["{{base_url}}"],
+							"path": ["rag", "index", ":document_id"],
+							"variable": [
+								{
+									"key": "document_id",
+									"value": "document-uuid-here"
+								}
+							]
+						},
+						"description": "Remove document from vector database index"
+					},
+					"response": []
+				},
+				{
+					"name": "Reindex Chunk",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rag/chunk/:chunk_id/reindex",
+							"host": ["{{base_url}}"],
+							"path": ["rag", "chunk", ":chunk_id", "reindex"],
+							"variable": [
+								{
+									"key": "chunk_id",
+									"value": "chunk-uuid-here"
+								}
+							]
+						},
+						"description": "Reindex a single chunk"
+					},
+					"response": []
+				}
+			],
+			"description": "RAG and semantic search endpoints"
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						},
+						"description": "Root endpoint - API information"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						},
+						"description": "Health check endpoint - check API and database status"
+					},
+					"response": []
+				}
+			],
+			"description": "Health and status endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

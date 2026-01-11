@@ -9,14 +9,14 @@ from app.core.dependencies import get_current_active_user, require_staff
 from app.models import Document, DocumentType, User
 from app.schemas.document import DocumentMetadataUpdate, DocumentUploadResponse
 from app.services.document_serivce import DocumentService
-from app.utils.file_validation import validate_upl, validate_upload
+from app.utils.file_validation import validate_upload
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 def get_document_service(db: Session = Depends(get_db)) -> DocumentService:
     return DocumentService(db=db)
 
-@router.post("/upload", response_model=DocumentUploadResponse, status=status.HTTP_201_CREATED)
+@router.post("/upload", response_model=DocumentUploadResponse, status_code=status.HTTP_201_CREATED)
 async def upload_document(
     document_type: DocumentType,
     description: Optional[str] =  None,

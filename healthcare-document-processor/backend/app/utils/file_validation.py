@@ -1,13 +1,29 @@
-import imghdr
+import io
+from PIL import Image
 from typing import Iterable
 from fastapi import HTTPException, UploadFile, status
 from app.core.config import settings
 
 
 def _detect_mimetype(content: bytes) -> str:
-    image_type = imghdr.what(None, h=content)
-    if image_type:
-        return f"image/{image_type}"
+    try:
+        image = Image.open(io.BytesIO(content))
+        format_mapping = {
+            'PNG': 'image/png',
+            'JPEG': 'image/jpeg',
+            'JPG': 'image/jpeg',
+            'TIFF': 'image/tiff',
+            'GIF': 'image/gif',
+            'BMP': 'image/bmp',
+            'WEBP': 'image/webp'
+        }
+        format_name = image.format
+        if format_name:
+            return format_mapping.get(format_name, f'image/{format_name.lower()}')
+
+    except Exception:
+        pass
+
     return "application/octet-stream"
 
 async def validate_upload(file: UploadFile) -> None:

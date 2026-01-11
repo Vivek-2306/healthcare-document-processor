@@ -81,7 +81,7 @@ class ChromaDBService(VectorDBService):
 
     def search(self, query_embedding: List[float], n_results: int = 10, filter: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         try:
-            where = filter if filter is None
+            where = filter if filter else None
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=n_results,

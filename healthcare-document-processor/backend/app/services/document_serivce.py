@@ -70,7 +70,7 @@ class DocumentService:
 
         return doc
 
-    def delete_document(self, doc: document) -> None:
+    def delete_document(self, doc: Document) -> None:
         self.storage.delete_file(doc.file_path)
         self.db.delete(doc)
         self.db.commit()

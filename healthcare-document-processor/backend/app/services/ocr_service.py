@@ -9,8 +9,7 @@ import pytesseract
 from PIL import Image, ImageEnhance, ImageFilter
 import pdf2image
 from pdf2image.exceptions import PDFInfoNotInstalledError, PDFPageCountError
-
-from core.config import settings
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

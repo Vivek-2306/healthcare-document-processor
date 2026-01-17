@@ -25,7 +25,15 @@ const EmptyState: React.FC<EmptyStateProps> = ({
     variant = 'default',
 }) => {
     const getDefaultIcon = () => {
-        const iconProps = { sx: { fontSize: 64, color: 'text.secondary', mb: 2 } };
+        const iconProps = { 
+            sx: { 
+                fontSize: 80, 
+                color: 'primary.main', 
+                mb: 3,
+                opacity: 0.2,
+                filter: 'drop-shadow(0 4px 12px rgba(79, 70, 229, 0.2))'
+            } 
+        };
         switch (variant) {
             case 'upload':
                 return <CloudUpload {...iconProps} />;
@@ -45,20 +53,36 @@ const EmptyState: React.FC<EmptyStateProps> = ({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                py: 8,
-                px: 2,
+                py: 12,
+                px: 3,
                 textAlign: 'center',
+                borderRadius: 4,
+                bgcolor: 'rgba(0,0,0,0.01)',
+                border: '2px dashed rgba(0,0,0,0.05)',
             }}
         >
-            {icon || getDefaultIcon()}
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+            <Box sx={{ position: 'relative' }}>
+                {icon || getDefaultIcon()}
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 800, mb: 1.5, fontFamily: '"Poppins", sans-serif' }}>
                 {title}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 400 }}>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 450, fontWeight: 500, lineHeight: 1.6 }}>
                 {description}
             </Typography>
             {actionLabel && onAction && (
-                <Button variant="contained" onClick={onAction}>
+                <Button 
+                    variant="contained" 
+                    size="large"
+                    onClick={onAction}
+                    sx={{ 
+                        px: 4, 
+                        py: 1.5, 
+                        borderRadius: 3, 
+                        fontWeight: 700,
+                        boxShadow: '0 8px 20px -6px rgba(79, 70, 229, 0.4)'
+                    }}
+                >
                     {actionLabel}
                 </Button>
             )}

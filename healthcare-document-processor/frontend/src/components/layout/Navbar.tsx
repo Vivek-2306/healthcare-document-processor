@@ -86,9 +86,11 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
             elevation={0}
             sx={{
                 width: '100%',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(12px)',
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
                 zIndex: (theme) => theme.zIndex.drawer + 1,
+                color: 'text.primary',
             }}
         >
             <Toolbar sx={{ px: { xs: 1, sm: 2, md: 3 }, width: '100%', maxWidth: '100%' }}>
@@ -104,16 +106,20 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                 )}
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mr: { xs: 1, sm: 2, md: 4 } }}>
-                    <HealthAndSafety sx={{ mr: 1, fontSize: { xs: 24, sm: 28 } }} />
+                    <HealthAndSafety sx={{ mr: 1, fontSize: { xs: 24, sm: 28 }, color: 'primary.main' }} />
                     <Typography
                         variant="h6"
                         component="div"
                         sx={{
-                            fontWeight: 700,
+                            fontWeight: 800,
+                            fontFamily: '"Poppins", sans-serif',
                             display: { xs: 'none', sm: 'block' },
+                            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                         }}
                     >
-                        Healthcare Docs
+                        HealthDocs
                     </Typography>
                 </Box>
 
@@ -124,11 +130,12 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                             to="/dashboard"
                             startIcon={<Dashboard />}
                             sx={{
-                                color: 'white',
-                                fontWeight: isActive('/dashboard') ? 700 : 400,
-                                bgcolor: isActive('/dashboard') ? 'rgba(255,255,255,0.15)' : 'transparent',
+                                color: isActive('/dashboard') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/dashboard') ? 700 : 500,
+                                bgcolor: isActive('/dashboard') ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
                                 '&:hover': {
-                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                    bgcolor: 'rgba(79, 70, 229, 0.04)',
+                                    color: 'primary.main',
                                 },
                             }}
                         >
@@ -139,11 +146,12 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                             to="/documents"
                             startIcon={<Folder />}
                             sx={{
-                                color: 'white',
-                                fontWeight: isActive('/documents') ? 700 : 400,
-                                bgcolor: isActive('/documents') ? 'rgba(255,255,255,0.15)' : 'transparent',
+                                color: isActive('/documents') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/documents') ? 700 : 500,
+                                bgcolor: isActive('/documents') ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
                                 '&:hover': {
-                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                    bgcolor: 'rgba(79, 70, 229, 0.04)',
+                                    color: 'primary.main',
                                 },
                             }}
                         >
@@ -158,8 +166,10 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                             <IconButton
                                 color="inherit"
                                 sx={{
+                                    color: 'text.secondary',
                                     '&:hover': {
-                                        bgcolor: 'rgba(255,255,255,0.1)',
+                                        bgcolor: 'rgba(0,0,0,0.04)',
+                                        color: 'primary.main',
                                     },
                                 }}
                             >
@@ -170,12 +180,14 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                                 color="inherit"
                                 onClick={handleNotificationsOpen}
                                 sx={{
+                                    color: 'text.secondary',
                                     '&:hover': {
-                                        bgcolor: 'rgba(255,255,255,0.1)',
+                                        bgcolor: 'rgba(0,0,0,0.04)',
+                                        color: 'primary.main',
                                     },
                                 }}
                             >
-                                <Badge badgeContent={3} color="error">
+                                <Badge badgeContent={3} color="error" overlap="circular">
                                     <Notifications />
                                 </Badge>
                             </IconButton>
@@ -190,18 +202,20 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                             sx: {
                                 mt: 1.5,
                                 minWidth: 300,
-                                borderRadius: 2,
+                                borderRadius: 3,
+                                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+                                border: '1px solid rgba(0,0,0,0.05)',
                             },
                         }}
                     >
                         <MenuItem disabled>
-                            <Typography variant="subtitle2" fontWeight={600}>
+                            <Typography variant="subtitle2" fontWeight={700}>
                                 Notifications
                             </Typography>
                         </MenuItem>
                         <Divider />
-                        <MenuItem onClick={handleNotificationsClose}>
-                            <Typography variant="body2">No new notifications</Typography>
+                        <MenuItem onClick={handleNotificationsClose} sx={{ py: 2 }}>
+                            <Typography variant="body2" color="text.secondary">No new notifications</Typography>
                         </MenuItem>
                     </Menu>
 
@@ -213,12 +227,13 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                                 gap: 1.5,
                                 ml: 2,
                                 px: 2,
-                                py: 0.5,
-                                borderRadius: 2,
-                                bgcolor: 'rgba(255,255,255,0.1)',
+                                py: 0.75,
+                                borderRadius: 2.5,
+                                bgcolor: 'rgba(0,0,0,0.03)',
+                                border: '1px solid rgba(0,0,0,0.05)',
                             }}
                         >
-                            <Typography variant="body2" sx={{ color: 'white', fontWeight: 500, display: { xs: 'none', lg: 'block' } }}>
+                            <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 600, display: { xs: 'none', lg: 'block' } }}>
                                 {user?.full_name}
                             </Typography>
                             {user?.role && (
@@ -226,11 +241,13 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                                     label={user.role}
                                     size="small"
                                     sx={{
-                                        bgcolor: 'rgba(255,255,255,0.2)',
+                                        bgcolor: 'primary.main',
                                         color: 'white',
-                                        fontWeight: 600,
-                                        height: 20,
-                                        fontSize: '0.7rem',
+                                        fontWeight: 700,
+                                        height: 22,
+                                        fontSize: '0.65rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px',
                                     }}
                                 />
                             )}
@@ -243,26 +260,28 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                         onClick={handleMenuOpen}
                         sx={{
                             ml: { xs: 0, sm: 1 },
+                            transition: 'all 0.2s',
                             '&:hover': {
-                                bgcolor: 'rgba(255,255,255,0.1)',
+                                bgcolor: 'rgba(79, 70, 229, 0.08)',
                             },
                         }}
                     >
                         {user?.full_name ? (
                             <Avatar
                                 sx={{
-                                    width: { xs: 32, sm: 36 },
-                                    height: { xs: 32, sm: 36 },
-                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                    width: { xs: 32, sm: 38 },
+                                    height: { xs: 32, sm: 38 },
+                                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
                                     color: 'white',
-                                    fontWeight: 600,
-                                    border: '2px solid rgba(255,255,255,0.3)',
+                                    fontWeight: 700,
+                                    fontSize: '0.875rem',
+                                    boxShadow: '0 2px 8px rgba(79, 70, 229, 0.3)',
                                 }}
                             >
                                 {getInitials(user.full_name)}
                             </Avatar>
                         ) : (
-                            <AccountCircle sx={{ fontSize: { xs: 32, sm: 36 } }} />
+                            <AccountCircle sx={{ fontSize: { xs: 32, sm: 38 }, color: 'text.secondary' }} />
                         )}
                     </IconButton>
 

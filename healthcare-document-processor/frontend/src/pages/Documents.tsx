@@ -102,23 +102,55 @@ const Documents: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ width: '100%', py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={2}>
+    <Container maxWidth="xl" sx={{ width: '100%', py: { xs: 3, md: 5 } }}>
+      <Box sx={{ mb: { xs: 4, md: 6 } }}>
+        <Stack 
+          direction={{ xs: 'column', sm: 'row' }} 
+          justifyContent="space-between" 
+          alignItems={{ xs: 'flex-start', sm: 'center' }} 
+          spacing={3}
+        >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-              Documents
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 800, 
+                mb: 1, 
+                fontFamily: '"Poppins", sans-serif',
+                letterSpacing: '-1px',
+                background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              My Documents
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Manage and organize your healthcare documents
+            <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Manage and organize your healthcare documents with ease
             </Typography>
           </Box>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} alignItems="center" sx={{ width: { xs: '100%', sm: 'auto' }, justifyContent: 'flex-end' }}>
             <ToggleButtonGroup
               value={viewMode}
               exclusive
               onChange={(_, newMode) => newMode && setViewMode(newMode)}
               size="small"
+              sx={{ 
+                bgcolor: 'rgba(0,0,0,0.03)',
+                p: 0.5,
+                borderRadius: 2.5,
+                '& .MuiToggleButton-root': {
+                  border: 'none',
+                  borderRadius: 2,
+                  px: 2,
+                  '&.Mui-selected': {
+                    bgcolor: 'white',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    color: 'primary.main',
+                    '&:hover': { bgcolor: 'white' }
+                  }
+                }
+              }}
             >
               <ToggleButton value="grid">
                 <ViewModule />
@@ -129,8 +161,16 @@ const Documents: React.FC = () => {
             </ToggleButtonGroup>
             <Button
               variant="contained"
+              size="large"
               startIcon={<CloudUpload />}
               onClick={() => setUploadDialogOpen(true)}
+              sx={{ 
+                px: 3, 
+                py: 1.25, 
+                borderRadius: 3, 
+                fontWeight: 700,
+                boxShadow: '0 8px 20px -6px rgba(79, 70, 229, 0.4)'
+              }}
             >
               Upload
             </Button>
@@ -138,11 +178,13 @@ const Documents: React.FC = () => {
         </Stack>
       </Box>
 
-      <SearchFilter
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        placeholder="Search documents..."
-      />
+      <Box sx={{ mb: 5 }}>
+        <SearchFilter
+          searchValue={searchValue}
+          onSearchChange={setSearchValue}
+          placeholder="Search documents..."
+        />
+      </Box>
 
       {uploadDialogOpen && (
         <Box sx={{ mb: 3 }}>

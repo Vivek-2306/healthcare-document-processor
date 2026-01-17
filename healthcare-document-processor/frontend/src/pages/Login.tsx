@@ -66,17 +66,29 @@ const Login: React.FC = () => {
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                justifyContent: 'center',
+                background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
                 position: 'relative',
+                overflow: 'hidden',
                 '&::before': {
                     content: '""',
                     position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                    opacity: 0.1,
+                    top: '-10%',
+                    left: '-10%',
+                    width: '40%',
+                    height: '40%',
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                    borderRadius: '50%',
+                },
+                '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-10%',
+                    right: '-10%',
+                    width: '50%',
+                    height: '50%',
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                    borderRadius: '50%',
                 },
             }}
         >
@@ -86,63 +98,72 @@ const Login: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        mb: 4,
+                        mb: 5,
                     }}
                 >
                     <Box
                         sx={{
                             bgcolor: 'white',
-                            borderRadius: '50%',
+                            borderRadius: '24px',
                             p: 2,
-                            mb: 2,
-                            boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+                            mb: 3,
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+                            transform: 'rotate(-5deg)',
                         }}
                     >
-                        <HealthAndSafety sx={{ fontSize: 48, color: 'primary.main' }} />
+                        <HealthAndSafety sx={{ fontSize: 56, color: 'primary.main' }} />
                     </Box>
                     <Typography
-                        variant="h4"
+                        variant="h3"
                         sx={{
                             color: 'white',
-                            fontWeight: 700,
-                            mb: 1,
+                            fontWeight: 800,
+                            mb: 1.5,
                             textAlign: 'center',
+                            fontFamily: '"Poppins", sans-serif',
+                            letterSpacing: '-1px',
                         }}
                     >
-                        Healthcare Document Processor
+                        HealthDocs
                     </Typography>
                     <Typography
-                        variant="body1"
+                        variant="h6"
                         sx={{
-                            color: 'rgba(255,255,255,0.9)',
+                            color: 'rgba(255,255,255,0.85)',
                             textAlign: 'center',
+                            fontWeight: 500,
+                            maxWidth: 400,
                         }}
                     >
-                        Secure document management for healthcare professionals
+                        Secure, intelligent document processing for the modern healthcare era.
                     </Typography>
                 </Box>
 
                 <Paper
-                    elevation={24}
+                    elevation={0}
                     sx={{
-                        padding: { xs: 3, sm: 4 },
-                        borderRadius: 3,
-                        backdropFilter: 'blur(10px)',
+                        padding: { xs: 4, sm: 6 },
+                        borderRadius: 4,
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backdropFilter: 'blur(20px)',
                     }}
                 >
-                    <Box sx={{ mb: 3, textAlign: 'center' }}>
-                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+                    <Box sx={{ mb: 4, textAlign: 'center' }}>
+                        <Typography variant="h4" sx={{ fontWeight: 800, mb: 1.5, fontFamily: '"Poppins", sans-serif' }}>
                             Welcome Back
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Sign in to continue to your account
+                        <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+                            Please enter your details to sign in
                         </Typography>
                     </Box>
 
                     {error && (
                         <Alert
                             severity="error"
-                            sx={{ mb: 3, borderRadius: 2 }}
+                            variant="filled"
+                            sx={{ mb: 4, borderRadius: 3, fontWeight: 600 }}
                             onClose={() => setError(null)}
                         >
                             {error}
@@ -168,11 +189,11 @@ const Login: React.FC = () => {
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <Email color="action" />
+                                                <Email sx={{ color: 'primary.main', mr: 1 }} />
                                             </InputAdornment>
                                         ),
                                     }}
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 3 }}
                                 />
                             )}
                         />
@@ -195,7 +216,7 @@ const Login: React.FC = () => {
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <Lock color="action" />
+                                                <Lock sx={{ color: 'primary.main', mr: 1 }} />
                                             </InputAdornment>
                                         ),
                                         endAdornment: (
@@ -210,7 +231,7 @@ const Login: React.FC = () => {
                                             </InputAdornment>
                                         ),
                                     }}
-                                    sx={{ mb: 3 }}
+                                    sx={{ mb: 4 }}
                                 />
                             )}
                         />
@@ -223,31 +244,48 @@ const Login: React.FC = () => {
                             disabled={isLoading}
                             startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <LoginIcon />}
                             sx={{
-                                mb: 3,
-                                py: 1.5,
-                                fontSize: '1rem',
-                                fontWeight: 600,
+                                py: 2,
+                                borderRadius: 3,
+                                fontSize: '1.1rem',
+                                fontWeight: 700,
+                                textTransform: 'none',
+                                boxShadow: '0 10px 20px -5px rgba(79, 70, 229, 0.4)',
+                                '&:hover': {
+                                    boxShadow: '0 15px 30px -5px rgba(79, 70, 229, 0.5)',
+                                },
                             }}
                         >
                             {isLoading ? 'Signing in...' : 'Sign In'}
                         </Button>
 
-                        <Divider sx={{ my: 3 }}>OR</Divider>
-
-                        <Box textAlign="center">
-                            <Typography variant="body2" color="text.secondary">
-                                Don't have an account?{' '}
-                                <Link
-                                    to="/register"
-                                    style={{
-                                        color: '#6366f1',
-                                        textDecoration: 'none',
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    Sign up for free
-                                </Link>
+                        <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                            <Divider sx={{ flex: 1 }} />
+                            <Typography variant="caption" sx={{ px: 2, color: 'text.disabled', fontWeight: 700, textTransform: 'uppercase' }}>
+                                New to HealthDocs?
                             </Typography>
+                            <Divider sx={{ flex: 1 }} />
+                        </Box>
+
+                        <Box textAlign="center" sx={{ mt: 3 }}>
+                            <Button
+                                component={Link}
+                                to="/register"
+                                fullWidth
+                                variant="outlined"
+                                sx={{
+                                    py: 1.5,
+                                    borderRadius: 3,
+                                    fontWeight: 700,
+                                    color: 'primary.main',
+                                    borderWidth: 2,
+                                    '&:hover': {
+                                        borderWidth: 2,
+                                        bgcolor: 'rgba(79, 70, 229, 0.04)',
+                                    },
+                                }}
+                            >
+                                Create an account
+                            </Button>
                         </Box>
                     </Box>
                 </Paper>

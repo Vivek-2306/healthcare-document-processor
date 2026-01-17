@@ -12,6 +12,7 @@ import {
   Grid,
   Avatar,
   LinearProgress,
+  IconButton,
 } from '@mui/material';
 import {
   ArrowBack,
@@ -111,7 +112,7 @@ const DocumentDetail: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Breadcrumbs />
-      
+
       <Box sx={{ mb: 3 }}>
         <Button
           startIcon={<ArrowBack />}
@@ -122,127 +123,153 @@ const DocumentDetail: React.FC = () => {
         </Button>
       </Box>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3, mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+      <Grid container spacing={4}>
+        <Grid item xs={12} lg={8}>
+          <Paper sx={{ p: { xs: 3, md: 4 }, mb: 4, borderRadius: 4 }}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'space-between',
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              gap: 3,
+              mb: 4
+            }}>
+              <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
                 <Avatar
                   sx={{
-                    bgcolor: 'primary.light',
-                    width: 64,
-                    height: 64,
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                    width: { xs: 56, md: 72 },
+                    height: { xs: 56, md: 72 },
+                    boxShadow: '0 8px 16px rgba(79, 70, 229, 0.2)',
                   }}
                 >
-                  {getFileIcon(document.mime_type)}
+                  {React.cloneElement(getFileIcon(document.mime_type) as React.ReactElement, { sx: { fontSize: { xs: 28, md: 36 } } })}
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 800, mb: 1, letterSpacing: '-0.5px', fontFamily: '"Poppins", sans-serif' }}>
                     {document.filename}
                   </Typography>
-                  <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
+                  <Stack direction="row" spacing={1.5} flexWrap="wrap" gap={1}>
                     <Chip
                       label={document.document_type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                       size="small"
+                      sx={{ fontWeight: 600, bgcolor: 'rgba(0,0,0,0.05)' }}
                     />
                     <Chip
                       label={document.status}
                       size="small"
                       color={getStatusColor(document.status)}
+                      sx={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem' }}
                     />
                   </Stack>
                 </Box>
               </Box>
-              <Stack direction="row" spacing={1}>
-                <Button
-                  variant="outlined"
-                  startIcon={<Download />}
+              <Stack direction="row" spacing={1} sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                <IconButton
                   onClick={handleDownload}
+                  sx={{ bgcolor: 'rgba(79, 70, 229, 0.05)', color: 'primary.main', '&:hover': { bgcolor: 'rgba(79, 70, 229, 0.1)' } }}
                 >
-                  Download
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<Edit />}
+                  <Download />
+                </IconButton>
+                <IconButton
                   onClick={() => navigate(`/documents/${document.id}/edit`)}
+                  sx={{ bgcolor: 'rgba(0, 0, 0, 0.05)', color: 'text.secondary', '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.1)' } }}
                 >
-                  Edit
-                </Button>
-                <Button
-                  variant="outlined"
+                  <Edit />
+                </IconButton>
+                <IconButton
                   color="error"
-                  startIcon={<Delete />}
                   onClick={() => setDeleteDialogOpen(true)}
+                  sx={{ bgcolor: 'rgba(239, 68, 68, 0.05)', color: 'error.main', '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)' } }}
                 >
-                  Delete
-                </Button>
+                  <Delete />
+                </IconButton>
               </Stack>
             </Box>
 
-            <Divider sx={{ my: 3 }} />
+            <Divider sx={{ my: 4, opacity: 0.6 }} />
 
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                Document Information
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <InsertDriveFile sx={{ color: 'primary.main', fontSize: 20 }} />
+                Document Metadata
               </Typography>
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    File Size
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {formatFileSize(document.file_size)}
-                  </Typography>
+                  <Box sx={{ p: 2, borderRadius: 3, bgcolor: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', mb: 0.5, display: 'block' }}>
+                      File Size
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                      {formatFileSize(document.file_size)}
+                    </Typography>
+                  </Box>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Uploaded
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {format(new Date(document.created_at), 'PPpp')}
-                  </Typography>
+                  <Box sx={{ p: 2, borderRadius: 3, bgcolor: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', mb: 0.5, display: 'block' }}>
+                      Upload Date
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                      {format(new Date(document.created_at), 'MMM dd, yyyy • HH:mm')}
+                    </Typography>
+                  </Box>
                 </Grid>
                 {document.processed_at && (
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="body2" color="text.secondary">
-                      Processed
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {format(new Date(document.processed_at), 'PPpp')}
-                    </Typography>
+                    <Box sx={{ p: 2, borderRadius: 3, bgcolor: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', mb: 0.5, display: 'block' }}>
+                        Processing Date
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                        {format(new Date(document.processed_at), 'MMM dd, yyyy • HH:mm')}
+                      </Typography>
+                    </Box>
                   </Grid>
                 )}
                 {document.mime_type && (
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="body2" color="text.secondary">
-                      MIME Type
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {document.mime_type}
-                    </Typography>
+                    <Box sx={{ p: 2, borderRadius: 3, bgcolor: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', mb: 0.5, display: 'block' }}>
+                        File Format
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                        {document.mime_type.split('/')[1].toUpperCase()}
+                      </Typography>
+                    </Box>
                   </Grid>
                 )}
               </Grid>
 
               {document.description && (
-                <Box sx={{ mt: 3 }}>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                <Box sx={{ mt: 4 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
                     Description
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7, bgcolor: 'rgba(0,0,0,0.02)', p: 3, borderRadius: 3 }}>
                     {document.description}
                   </Typography>
                 </Box>
               )}
 
               {document.tags && document.tags.length > 0 && (
-                <Box sx={{ mt: 3 }}>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                    Tags
+                <Box sx={{ mt: 4 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+                    Tags & Labels
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
                     {document.tags.map((tag) => (
-                      <Chip key={tag} label={tag} size="small" />
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        sx={{
+                          fontWeight: 600,
+                          bgcolor: 'rgba(79, 70, 229, 0.08)',
+                          color: 'primary.main',
+                          border: '1px solid rgba(79, 70, 229, 0.1)',
+                          '&:hover': { bgcolor: 'rgba(79, 70, 229, 0.12)' }
+                        }}
+                      />
                     ))}
                   </Stack>
                 </Box>
@@ -250,40 +277,80 @@ const DocumentDetail: React.FC = () => {
             </Box>
 
             {document.status === DocumentStatus.PROCESSING && (
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  Processing Status
-                </Typography>
-                <LinearProgress />
+              <Box sx={{ mt: 5 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                    Processing in progress...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                    75%
+                  </Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={75}
+                  sx={{
+                    height: 10,
+                    borderRadius: 5,
+                    bgcolor: 'rgba(79, 70, 229, 0.1)',
+                    '& .MuiLinearProgress-bar': {
+                      borderRadius: 5,
+                      background: 'linear-gradient(90deg, #4f46e5, #7c3aed)',
+                    }
+                  }}
+                />
               </Box>
             )}
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, position: 'sticky', top: 80 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-              Quick Actions
-            </Typography>
-            <Stack spacing={2}>
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<Download />}
-                onClick={handleDownload}
-              >
-                Download Document
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<Edit />}
-                onClick={() => navigate(`/documents/${document.id}/edit`)}
-              >
-                Edit Metadata
-              </Button>
-            </Stack>
-          </Paper>
+        <Grid item xs={12} lg={4}>
+          <Stack spacing={4} sx={{ position: 'sticky', top: 100 }}>
+            <Paper sx={{ p: 4, borderRadius: 4 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
+                Actions
+              </Typography>
+              <Stack spacing={2}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  startIcon={<Download />}
+                  onClick={handleDownload}
+                  sx={{ py: 1.5, borderRadius: 3, fontWeight: 700 }}
+                >
+                  Download File
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  startIcon={<Edit />}
+                  onClick={() => navigate(`/documents/${document.id}/edit`)}
+                  sx={{ py: 1.5, borderRadius: 3, fontWeight: 700, borderWidth: 2, '&:hover': { borderWidth: 2 } }}
+                >
+                  Edit Details
+                </Button>
+              </Stack>
+            </Paper>
+
+            <Paper
+              sx={{
+                p: 4,
+                borderRadius: 4,
+                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                border: '1px solid rgba(0,0,0,0.05)'
+              }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                Need Help?
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
+                If you're having trouble viewing or processing this document, please contact our support team.
+              </Typography>
+              <Button color="primary" sx={{ fontWeight: 700, p: 0 }}>Contact Support</Button>
+            </Paper>
+          </Stack>
         </Grid>
       </Grid>
 

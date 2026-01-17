@@ -18,15 +18,15 @@ declare module '@mui/material/styles' {
 const baseTheme: ThemeOptions = {
     palette: {
         primary: {
-            main: '#6366f1',
-            light: '#818cf8',
-            dark: '#4f46e5',
+            main: '#4f46e5', // Indigo 600
+            light: '#818cf8', // Indigo 400
+            dark: '#3730a3', // Indigo 800
             contrastText: '#ffffff',
         },
         secondary: {
-            main: '#ec4899',
-            light: '#f472b6',
-            dark: '#db2777',
+            main: '#0ea5e9', // Sky 500
+            light: '#38bdf8', // Sky 400
+            dark: '#0369a1', // Sky 700
         },
         error: {
             main: '#ef4444',
@@ -53,45 +53,43 @@ const baseTheme: ThemeOptions = {
             paper: '#ffffff',
         },
         gradient: {
-            primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            secondary: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            primary: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            secondary: 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)',
         },
     },
     typography: {
-        fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-        ].join(','),
+        fontFamily: '"Inter", "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         h1: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 700,
             fontSize: '2.5rem',
             lineHeight: 1.2,
         },
         h2: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 700,
             fontSize: '2rem',
             lineHeight: 1.3,
         },
         h3: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 600,
             fontSize: '1.75rem',
             lineHeight: 1.4,
         },
         h4: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 600,
             fontSize: '1.5rem',
             lineHeight: 1.4,
         },
         h5: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 600,
             fontSize: '1.25rem',
         },
         h6: {
+            fontFamily: '"Poppins", sans-serif',
             fontWeight: 600,
             fontSize: '1rem',
         },
@@ -108,27 +106,32 @@ const baseTheme: ThemeOptions = {
         values: {
             xs: 0,
             sm: 600,
-            md: 960,
-            lg: 1280,
-            xl: 1920,
+            md: 900, // Adjusted md breakpoint for better layouts
+            lg: 1200,
+            xl: 1536,
         },
     },
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: 8,
-                    padding: '10px 24px',
+                    borderRadius: 10,
+                    padding: '8px 20px',
                     fontSize: '0.9375rem',
                     boxShadow: 'none',
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
+                    },
+                    '&:active': {
+                        transform: 'translateY(0)',
                     },
                 },
                 contained: {
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
                     '&:hover': {
-                        background: 'linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)',
+                        background: 'linear-gradient(135deg, #4338ca 0%, #6d28d9 100%)',
                     },
                 },
             },
@@ -137,13 +140,21 @@ const baseTheme: ThemeOptions = {
             styleOverrides: {
                 root: {
                     '& .MuiOutlinedInput-root': {
-                        borderRadius: 8,
-                        '&:hover fieldset': {
-                            borderColor: '#6366f1',
+                        borderRadius: 10,
+                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                            backgroundColor: '#ffffff',
+                            '& fieldset': {
+                                borderColor: '#4f46e5',
+                            },
                         },
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#6366f1',
-                            borderWidth: 2,
+                        '&.Mui-focused': {
+                            backgroundColor: '#ffffff',
+                            '& fieldset': {
+                                borderColor: '#4f46e5',
+                                borderWidth: 2,
+                            },
                         },
                     },
                 },
@@ -153,14 +164,27 @@ const baseTheme: ThemeOptions = {
             styleOverrides: {
                 root: {
                     borderRadius: 16,
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    border: '1px solid rgba(226, 232, 240, 0.8)',
+                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    },
                 },
             },
         },
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    borderRadius: 12,
+                    borderRadius: 16,
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backdropFilter: 'blur(8px)',
+                    backgroundColor: 'rgba(79, 70, 229, 0.9)',
                 },
             },
         },

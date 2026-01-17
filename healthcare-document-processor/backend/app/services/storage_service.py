@@ -2,12 +2,10 @@ import mimetypes
 from pathlib import Path
 from typing import BinaryIO, Optional
 from uuid import uuid4
-import uuid
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 from fastapi import HTTPException, status
-from sqlalchemy.sql.coercions import expect
 
 from app.core.config import settings
 
@@ -52,12 +50,13 @@ class S3StorageService:
                 file_obj,
                 self.bucket,
                 object_key,
-                ExtraAgrs = {
+                ExtraArgs = {
                     "ACL": "private",
                     "ContentType": content_type,
                     "ServerSideEncryption": "AES256"
                 }
             )
+            return object_key
         except (BotoCoreError, ClientError) as exc:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
@@ -79,4 +78,13 @@ class S3StorageService:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail=f"Failed to generate download url: {exc}"
+            )
+
+    def delete_file(self, object_key: str) -> None:
+        try:
+            self.client.delete_object(Bucket=self.bucket, Key=object_key)
+        except (BotoCoreError, ClientError) as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=f"Failed to delete file from storage: {exc}"
             )

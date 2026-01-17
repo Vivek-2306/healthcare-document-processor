@@ -2,7 +2,7 @@ from typing import List, Optional
 from unittest import result
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session, query
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from app.core.database import get_db
@@ -62,14 +62,14 @@ async def search_document(
 ): 
     try:
         results = service.search_documents(
-            query=query,
+            query=search_query.query,
             user=current_user,
             n_results=search_query.n_results,
             document_type=search_query.document_type,
             document_id=search_query.document_id
         )
 
-        return SearchQuery(
+        return SearchResponse(
             query=search_query.query,
             results=results,
             total_results=len(results)

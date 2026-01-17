@@ -37,10 +37,20 @@ class RAGService:
         if not chunks:
             raise ValueError("No chunks found for document")
 
-        texts = [chunk.content for chunk in chunks]
+        # Ensure all chunk contents are strings and filter out None/empty values
+        # Filter chunks with valid string content
+        valid_chunks = [
+            chunk for chunk in chunks 
+            if chunk.content is not None and isinstance(chunk.content, str) and chunk.content.strip()
+        ]
+        
+        if not valid_chunks:
+            raise ValueError("No valid chunk content found for indexing")
+        
+        texts = [str(chunk.content) for chunk in valid_chunks]
         embeddings = self.embedding_service.generate_embeddings_batch(texts)
-        ids = [str(chunk.id) for chunk in chunks]
-        documents = [chunk.content for chunk in chunks]
+        ids = [str(chunk.id) for chunk in valid_chunks]
+        documents = [str(chunk.content) for chunk in valid_chunks]
         metadata = [
             {
                 'document_id': str(document_id),
@@ -51,7 +61,7 @@ class RAGService:
                 'document_type': document.document_type.value if document.document_type else None,
                 'filename': document.filename
             }
-            for chunk in chunks
+            for chunk in valid_chunks
         ]
 
         self.vector_db.add_embeddings(
@@ -61,7 +71,7 @@ class RAGService:
             ids=ids
         )
 
-        for chunk, embedding_id in zip(chunks, ids):
+        for chunk, embedding_id in zip(valid_chunks, ids):
             chunk.embedding_id = embedding_id
             chunk.embedding_model = self.embedding_service.model
 
@@ -69,7 +79,7 @@ class RAGService:
 
         return {
             'document_id': str(document.id),
-            'chunk_indexed': len(chunks),
+            'chunk_indexed': len(valid_chunks),
             'status': 'success'
         }
 
@@ -156,14 +166,15 @@ class RAGService:
         chunk_id: UUID,
         user: User
     ) -> Dict[str, Any]:
+        # First get the chunk by chunk_id
         chunk = self.db.query(DocumentChunk).filter(
-            Document.id == chunk.document_id,
-            Document.user_id == user.id
+            DocumentChunk.id == chunk_id
         ).first()
 
         if not chunk:
             raise ValueError("Chunk not found")
 
+        # Then verify the document belongs to the user
         document = self.db.query(Document).filter(
             Document.id == chunk.document_id,
             Document.user_id == user.id
@@ -172,7 +183,11 @@ class RAGService:
         if not document:
             raise ValueError("Access denied")
 
-        embedding = self.embedding_service.generate_embedding(chunk.content)
+        # Ensure chunk.content is a string and not None
+        if not chunk.content or not isinstance(chunk.content, str):
+            raise ValueError(f"Chunk content is invalid or empty for chunk {chunk_id}")
+
+        embedding = self.embedding_service.generate_embedding(str(chunk.content))
 
         metadata = {
             'document_id': str(chunk.document_id),
@@ -188,7 +203,7 @@ class RAGService:
         self.vector_db.update_embedding(
             id=embedding_id,
             embedding=embedding,
-            document=chunk.content,
+            document=str(chunk.content),
             metadata=metadata
         )
 

@@ -45,9 +45,14 @@ class Settings(BaseSettings):
     S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "healthcare-documents-bucket")
 
     # AI/ML
-    OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
+    OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", "").strip() if os.getenv("OPENAI_API_KEY") else None
     PINECONE_API_KEY: Optional[str] = os.getenv("PINECONE_API_KEY")
     PINECONE_ENVIRONMENT: Optional[str] = os.getenv("PINECONE_ENVIRONMENT")
+    
+    # ChromaDB Cloud
+    CHROMADB_API_KEY: Optional[str] = os.getenv("CHROMADB_API_KEY", "").strip() if os.getenv("CHROMADB_API_KEY") else None
+    CHROMADB_TENANT: Optional[str] = os.getenv("CHROMADB_TENANT", "").strip() if os.getenv("CHROMADB_TENANT") else None
+    CHROMADB_DATABASE: Optional[str] = os.getenv("CHROMADB_DATABASE", "healthcare-documents")
 
     # OCR
     TESSERACT_CMD: Optional[str] = os.getenv("TESSERACT_CMD")

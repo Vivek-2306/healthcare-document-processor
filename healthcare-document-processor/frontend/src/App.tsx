@@ -13,6 +13,8 @@ const Register = lazy(() => import('./pages/Register'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Documents = lazy(() => import('./pages/Documents'));
 const DocumentDetail = lazy(() => import('./pages/DocumentDetail'));
+const Processing = lazy(() => import('./pages/Processing'));
+const Search = lazy(() => import('./pages/Search'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient({
@@ -63,6 +65,26 @@ const App: React.FC = () => {
                       <ProtectedRoute>
                         <MainLayout>
                           <DocumentDetail />
+                        </MainLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/documents/:id/processing"
+                    element={
+                      <ProtectedRoute>
+                        <MainLayout>
+                          <Processing />
+                        </MainLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/search"
+                    element={
+                      <ProtectedRoute>
+                        <MainLayout>
+                          <Search />
                         </MainLayout>
                       </ProtectedRoute>
                     }

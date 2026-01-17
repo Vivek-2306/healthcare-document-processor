@@ -4,3 +4,5 @@ export { default as Dashboard } from './Dashboard';
 export { default as NotFound } from './NotFound';
 export { default as Documents } from './Documents';
 export { default as DocumentDetail } from './DocumentDetail';
+export { default as Processing } from './Processing';
+export { default as Search } from './Search';

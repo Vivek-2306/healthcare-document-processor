@@ -49,23 +49,35 @@ class ChromaDBService(VectorDBService):
         super().__init__()
         try:
             import chromadb
-            from chromadb.config import Settings
 
-            self.client = chromadb.Client(Settings(
-                chroma_db_impl="duckdb+parquet",
-                persist_directory="./chroma_db"
-            ))
-            self.collection = self._get_or_create_collection()
+            # Check if ChromaDB Cloud credentials are configured
+            if settings.CHROMADB_API_KEY and settings.CHROMADB_TENANT:
+                # Use ChromaDB Cloud Client
+                logger.info("Initializing ChromaDB Cloud Client")
+                self.client = chromadb.CloudClient(
+                    api_key=settings.CHROMADB_API_KEY,
+                    tenant=settings.CHROMADB_TENANT,
+                    database=settings.CHROMADB_DATABASE or 'healthcare-documents'
+                )
+            else:
+                # Fall back to local PersistentClient
+                logger.info("ChromaDB Cloud not configured, using local PersistentClient")
+                self.client = chromadb.PersistentClient(
+                    path="./chroma_db"
+                )
+            
+            # Get or create the collection
+            self.collection = self.client.get_or_create_collection(
+                name=self.collection_name
+            )
+            logger.info(f"ChromaDB collection '{self.collection_name}' ready")
 
         except ImportError:
             logger.error("ChromaDB is not installed. Install with: pip install chromadb")
             raise
-
-    def _get_or_create_collection(self):
-        try:
-            return self.client.get_collection(name=self.collection)
-        except:
-            return self.client.create_collection(name=self.collection)
+        except Exception as e:
+            logger.error(f"Error initializing ChromaDB: {e}")
+            raise
 
     def add_embeddings(self, embeddings: List[List[float]], documents: List[str], metadatas: List[Dict[str, Any]], ids: List[str]) -> None:
         try:

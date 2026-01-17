@@ -1,11 +1,12 @@
+from io import BytesIO
 from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_active_user, require_staff
+from app.core.dependencies import get_current_active_user
 from app.models import Document, DocumentType, User
 from app.schemas.document import DocumentMetadataUpdate, DocumentUploadResponse
 from app.services.document_serivce import DocumentService
@@ -14,25 +15,29 @@ from app.utils.file_validation import validate_upload
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 def get_document_service(db: Session = Depends(get_db)) -> DocumentService:
-    return DocumentService(db=db)
+    return DocumentService(db=db, storage_service=None)
 
 @router.post("/upload", response_model=DocumentUploadResponse, status_code=status.HTTP_201_CREATED)
 async def upload_document(
-    document_type: DocumentType,
-    description: Optional[str] =  None,
-    tags: Optional[List[str]] = None,
+    document_type: DocumentType = Form(...),
+    description: Optional[str] = Form(None),
+    tags: Optional[List[str]] = Form(None),
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_active_user),
     service: DocumentService = Depends(get_document_service),
 ):
     await validate_upload(file)
     contents = await file.read()
-    await file.seek(0)
+    file_size = len(contents)
+    
+    # Create a BytesIO object from the contents for the service
+    file_obj = BytesIO(contents)
 
     document = service.upload_document(
-        file_obj=file.file,
-        filename=file.filename,
+        file_obj=file_obj,
+        filename=file.filename or "unknown",
         content_type=file.content_type,
+        file_size=file_size,
         user=current_user,
         document_type=document_type,
         description=description,
@@ -79,9 +84,9 @@ def update_metadata(
 @router.get("/{document_id}/download", response_model=dict)
 def generate_download_link(
     document_id: UUID,
-    current_usesr: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_active_user),
     service: DocumentService = Depends(get_document_service),
 ):
-    document = service.get_document(document_id, current_usesr)
+    document = service.get_document(document_id, current_user)
     download_url = service.generate_download_url(document)
     return {'url': download_url, "expires_in": 600}
